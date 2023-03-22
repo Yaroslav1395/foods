@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.food.repository.DishRepository">
+
+    <resultMap id="DishResultMap" type="com.example.food.domain.dish.Dish" autoMapping="false">
+        <id property="id" column="dish_id"/>
+        <result property="name" column="dish_name"/>
+        <result property="price" column="dish_price"/>
+        <collection property="type"
+                    ofType="com.example.food.domain.dish.Type"
+                    autoMapping="false">
+            <result property="name" column="dish_type"/>
+        </collection>
+    </resultMap>
+
+    <select id="findById" resultMap="DishResultMap">
+        SELECT
+        d.id as dish_id,
+        d.name as dish_name,
+        d.price as dish_price,
+        t.type as dish_type
+        FROM dish as d
+        LEFT JOIN type t on d.id = t.dish_id
+        WHERE d.id = #{id}
+    </select>
+    <select id="getDishOfRestaurant" resultMap="DishResultMap">
+        select
+        d.id as dish_id,
+        d.name as dish_name,
+        d.price as dish_price,
+        t.type as dish_type
+        FROM dish as d
+        LEFT JOIN type t on d.id = t.dish_id
+        LEFT JOIN menu m on d.id = m.dish_id
+        WHERE m.restaurant_id = #{id}
+    </select>
+
+    <insert id="create" keyProperty="id" keyColumn="id" useGeneratedKeys="true">
+        INSERT INTO dish (name, price)
+        VALUES (#{name}, #{price})
+    </insert>
+
+    <insert id="insertDishType">
+        INSERT INTO users_roles (user_id, role)
+        VALUES (#{userId}, #{role})
+    </insert>
+    <insert id="insertDishMenu">
+        insert into menu(dish_id, restaurant_id)
+        values(#{dishId}, #{restaurantId})
+    </insert>
+
+
+
+</mapper>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.food.repository.OrderRepository">
+
+    <resultMap id="OrderResultMap" type="com.example.food.domain.order.Order" autoMapping="false">
+        <id property="id" column="order_id"/>
+        <result property="dateTime" column="order_date_time"/>
+        <association property="user" resultMap="com.example.food.repository.UserRepository.UserResultMap"/>
+        <association property="dish" resultMap="com.example.food.repository.DishRepository.DishResultMap"/>
+    </resultMap>
+    <select id="getById" resultMap="OrderResultMap">
+        select
+        o.id as order_id,
+        o.date_time as order_date_time,
+        u.id as user_id,
+        u.name as user_name,
+        u.username as user_user_name,
+        ur.role as user_role_role,
+        d.id as dish_id,
+        d.name as dish_name,
+        d.price as dish_price,
+        t.type as dish_type
+        from orders as o
+        inner join dish as d on d.id = o.dish_id
+        inner join type as t on t.dish_id = d.id
+        inner join users as u on u.id = o.user_id
+        inner join users_roles as ur on u.id = ur.user_id
+        where o.id = #{id}
+    </select>
+    <select id="getUserOrder" resultMap="OrderResultMap">
+        select
+        o.id as order_id,
+        o.date_time as order_date_time,
+        u.id as user_id,
+        u.name as user_name,
+        u.username as user_user_name,
+        ur.role as user_role_role,
+        d.id as dish_id,
+        d.name as dish_name,
+        d.price as dish_price,
+        t.type as dish_type
+        from orders as o
+        inner join dish as d on d.id = o.dish_id
+        inner join type as t on t.dish_id = d.id
+        inner join users as u on u.id = o.user_id
+        inner join users_roles as ur on u.id = ur.user_id
+        where u.id = #{userId}
+    </select>
+    <insert id="create" keyProperty="id" keyColumn="id" useGeneratedKeys="true">
+        insert into orders(dish_id, user_id, date_time)
+        values(#{dish_id}, #{user_id}, #{dateTime})
+    </insert>
+</mapper>

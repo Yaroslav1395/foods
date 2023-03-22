@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.food.repository.RestaurantRepository">
+
+    <resultMap id="RestaurantResultMap" type="com.example.food.domain.restaurant.Restaurant" autoMapping="false">
+        <id property="id" column="restaurant_id"/>
+        <result property="name" column="restaurant_name"/>
+        <result property="description" column="restaurant_description"/>
+    </resultMap>
+
+    <select id="findById" resultMap="RestaurantResultMap">
+        SELECT
+        r.id as restaurant_id,
+        r.name as restaurant_name,
+        r.description as restaurant_description
+        FROM restaurant as r
+        WHERE r.id = #{id}
+    </select>
+
+    <select id="findAll" resultMap="RestaurantResultMap">
+        SELECT
+        r.id as restaurant_id,
+        r.name as restaurant_name,
+        r.description as restaurant_description
+        FROM restaurant as r
+    </select>
+
+    <insert id="create" keyProperty="id" keyColumn="id" useGeneratedKeys="true">
+        insert into restaurant(name, description)
+        values(#{name}, #{description})
+    </insert>
+
+</mapper>
